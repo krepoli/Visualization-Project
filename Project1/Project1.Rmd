@@ -1,0 +1,67 @@
+---
+title: "How do Age, Sex, and ECGs Account for a Person's Risk of Heart Disease?"
+author: "Katie Repoli"
+date: "March 1, 2024"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+    code_download: true
+
+---
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+# Load any R Packages you may need
+library(tidyverse)
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+# Load any data sets you may need
+heart <- read.csv("heart.csv")
+```
+
+# Introduction
+
+I analyzed the [Heart Attack Prediction](https://www.kaggle.com/datasets/juledz/heart-attack-prediction?resource=download)
+data set on Kaggle, which included information from four distinct databases in Cleveland, Hungary, Switzerland, and Long Beach Virginia. This data set includes key factors that are often associated with heart disease. I specifically analysed how Sex and Age relate to Maximum Heart Rate, which is often a sign of heart problems in an individual. I also examined how common each Resting Electrocardiographic Result was among this population, as this test is used to detect abnormalities in the heart. To sum up my results, younger people were more likely to have a higher heart rate, increasing their risk of heart disease, while gender had no affect. Abnormal resting electrocardiogram was the most common result followed by a Normal resting electrocardiogram, while Hypertrophy was the least common. An abnormal or hypertrophy result increases a person's risk of experiencing a heart attack in the near future so about half of these people are at risk based on this variable.
+
+## Graph 1
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+heart$sex <- as.factor(heart$sex)
+```
+
+
+```{r, warning = FALSE, message = FALSE}
+ggplot(data=heart, aes(x=thalach, y=age))+
+  geom_point(aes(color=sex))+
+  geom_smooth(se=FALSE)+
+  labs(x="Maximum Heart Rate Achieved", y="Age", color="Sex",
+       title="Maximum Heart Rate Achieved vs. Age and Sex in Four Distinct Databases")+
+  scale_color_manual(values = c("hotpink2","deepskyblue2"),
+                                labels = c("Female", "Male"))
+```
+
+
+
+This graph compares Maximum Heart Rate Achieved to Age, in the y axis, and Sex, in the color function. I used a scatterplot because I wanted to compare two numerical variables. The smooth line on the graph slowly decreases and then drops towards the end, meaning that maximum heart rate increases as age decreases. Therefore, younger people are more likely to be at risk of heart disease in this population. There are also more points on the graph representing males (the color blue) than females (the color black), meaning that more participants in this study were males. The maximum heart rates of both males and females tended to vary, proving that gender has no affect on maximum heart rate.
+
+### Graph 2
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+heart$restecg <- as.factor(heart$restecg)
+levels(heart$restecg) <- list(Normal=0, Abnormality=1, Hypertrophy=2)
+```
+
+
+```{r, warning = FALSE, message = FALSE}
+ggplot(data=heart, aes(x=restecg))+
+  geom_bar(fill="darkorchid")+
+  labs(x="Resting Electrocardiographic Results",
+       y = "Count", title = "Resting Electrocardiographic Results in Four Distinct Databases")
+```
+
+
+
+This graph compares each Resting Electrocardiographic Result to each other. These results include Normal, Abnormal, and Hypertrophy. They connect to my previous graph, as they measure a person's heart rate. I chose a histogram because I wanted to find the count of a single numerical variable, and compare the results of each. According to the graph, about half the people in this population had a [Normal Resting Electrocardiographic](https://www.mountsinai.org/health-library/tests/electrocardiogram#:~:text=If%20the%20test%20is%20normal,to%20100%20beats%20per%20minute.) result, meaning their heart was beating at an even rate of 60 to 100 beats per minute. Although many people, as observed in the first graphic, had a maximum heart rate higher than 60-100, this was most likely an uncommon occurrence, as half of these people received a normal result from their resting electrocardiogram. The other half of these people had an [Abnormal Resting Electrocardiographic](https://www.mountsinai.org/health-library/tests/electrocardiogram#:~:text=Many%20different%20heart%20conditions%20can,one%20in%20the%20near%20future.) result and a few had Hypertrophy. These people had either a fast, slow, or abnormal heart rhythm, which increases their risk of heart disease.
